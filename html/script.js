@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- OYUN AYARLARI ---
+    const CONFIG = {
+        difficulty: 'HARD', // Seçenekler: 'EASY', 'HARD'
+        colors: {
+            easy: '#10b981', // Yeşil
+            hard: '#ff0055'  // Kırmızı
+        }
+    };
+
     const app = document.getElementById('app');
     
     if (window.invokeNative) {
@@ -10,31 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.getElementById('close-btn');
 
     // Navigation
-    console.log('Nav items count:', navItems.length);
-
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
             const targetId = item.getAttribute('data-page');
-            console.log('Nav clicked:', targetId);
-
+            
             navItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
             
             pages.forEach(p => p.classList.remove('active'));
             
             const targetPage = document.getElementById(targetId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-                console.log('Switched to:', targetId);
-            } else {
-                console.error('Target page not found:', targetId);
-            }
+            if (targetPage) targetPage.classList.add('active');
         });
     });
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeUI);
-    }
+    if (closeBtn) closeBtn.addEventListener('click', closeUI);
 
     window.addEventListener('message', (event) => {
         const data = event.data;
@@ -43,34 +42,26 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (data.action === 'close') {
             app.style.display = 'none';
             stopQuantumGame();
-        } else if (data.action === 'updateStatus') {
-            if (data.ip) {
-                const ipEl = document.querySelector('.ip-address');
-                if (ipEl) ipEl.innerText = data.ip;
-            }
+        } else if (data.action === 'updateStatus' && data.ip) {
+            const ipEl = document.querySelector('.ip-address');
+            if (ipEl) ipEl.innerText = data.ip;
         }
     });
 
     function closeUI() {
         const resourceName = window.GetParentResourceName ? window.GetParentResourceName() : 'fivem-hacker-script';
-        fetch(`https://${resourceName}/closeUI`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-            body: JSON.stringify({})
-        });
+        fetch(`https://${resourceName}/closeUI`, { method: 'POST', body: JSON.stringify({}) });
     }
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeUI();
-        
-        // Quantum Game Controls
         if (e.code === 'Space' && quantumState.active) {
             e.preventDefault();
             unlockLayer();
         }
     });
 
-    // --- QUANTUM LOCK MINIGAME (HARDCORE MODE) ---
+    // --- QUANTUM LOCK MINIGAME ---
     const gameContainer = document.querySelector('.hack-container-inner');
     const injectBtn = document.getElementById('btn-inject');
     let canvas, ctx;
@@ -79,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         active: false,
         level: 0,
         maxLevels: 3,
-        rings: [], // { radius, angle, baseSpeed, currentSpeed, gapSize, jitterPhase }
+        rings: [], 
         ball: { r: 5, angle: 0, speed: 0, active: false, progress: 0 },
         animationId: null
     };
@@ -114,18 +105,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createRings() {
         quantumState.rings = [];
+        const isHard = CONFIG.difficulty === 'HARD';
+
         for(let i=0; i<quantumState.maxLevels; i++) {
-            // HARD MODE: Hız ve yön değişkenliği
-            const baseSpeed = 0.04 + (i * 0.02); // Daha hızlı (0.04 - 0.08)
+            // Zorluk Ayarları
+            let baseSpeed = 0.02 + (i * 0.01);
+            let gapSize = Math.PI / 4; // 45 derece (Kolay)
+            let jitterSpeed = 0;
+
+            if (isHard) {
+                baseSpeed = 0.04 + (i * 0.02); // Daha hızlı
+                gapSize = (Math.PI / 6) - (i * 0.1); // Çok daha dar (30 derece ve altı)
+                jitterSpeed = 0.05 + (Math.random() * 0.05);
+            }
+
             const direction = Math.random() > 0.5 ? 1 : -1;
             
             quantumState.rings.push({
                 radius: 150 - (i * 40),
                 angle: Math.random() * Math.PI * 2,
                 baseSpeed: baseSpeed * direction,
-                gapSize: (Math.PI / 5) - (i * 0.1), // Daha dar boşluk (PI/5 ~ 36 derece)
+                gapSize: gapSize,
                 jitterPhase: Math.random() * Math.PI,
-                jitterSpeed: 0.05 + (Math.random() * 0.05) // Hız değişim frekansı
+                jitterSpeed: jitterSpeed
             });
         }
     }
@@ -136,13 +138,18 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const cx = canvas.width / 2;
         const cy = canvas.height / 2;
+        const isHard = CONFIG.difficulty === 'HARD';
 
         quantumState.rings.forEach((ring, index) => {
-            // HARD MODE: Dinamik Hız Değişimi
             if (index >= quantumState.level) {
-                ring.jitterPhase += ring.jitterSpeed;
-                const speedVariation = Math.sin(ring.jitterPhase) * 0.02; // Hız dalgalanması
-                ring.angle += ring.baseSpeed + speedVariation;
+                // Sadece Hard modda hız değişimi (sinusoidal) var
+                if (isHard) {
+                    ring.jitterPhase += ring.jitterSpeed;
+                    const speedVariation = Math.sin(ring.jitterPhase) * 0.02;
+                    ring.angle += ring.baseSpeed + speedVariation;
+                } else {
+                    ring.angle += ring.baseSpeed; // Sabit hız
+                }
             }
 
             // Draw Ring
@@ -150,15 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.arc(cx, cy, ring.radius, ring.angle + ring.gapSize/2, ring.angle + Math.PI*2 - ring.gapSize/2);
             
             // Renkler
-            if (index < quantumState.level) ctx.strokeStyle = 'rgba(16, 185, 129, 0.5)'; // Geçilen
-            else if (index === quantumState.level) ctx.strokeStyle = '#00f3ff'; // Aktif
-            else ctx.strokeStyle = 'rgba(255,255,255,0.1)'; // Bekleyen
+            if (index < quantumState.level) ctx.strokeStyle = 'rgba(16, 185, 129, 0.5)'; 
+            else if (index === quantumState.level) ctx.strokeStyle = '#00f3ff'; 
+            else ctx.strokeStyle = 'rgba(255,255,255,0.1)'; 
             
-            ctx.lineWidth = 12; // Biraz incelttim
+            ctx.lineWidth = 12;
             ctx.lineCap = 'round';
             ctx.stroke();
             
-            // Aktif halkanın gap kenarlarına parlama ekle (Visual Cue)
             if (index === quantumState.level) {
                 ctx.shadowBlur = 15;
                 ctx.shadowColor = '#00f3ff';
@@ -167,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Entry Marker (Fixed at 0 rad - 3 o'clock)
+        // Entry Marker
         const cxTarget = cx + 160;
         ctx.beginPath();
         ctx.moveTo(cx + 180, cy);
@@ -176,57 +182,43 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Player Projectile
+        // Projectile
         if (quantumState.ball.active) {
-            quantumState.ball.progress += 12; // Mermi hızı
+            quantumState.ball.progress += 12;
             const currentRadius = 160 - quantumState.ball.progress;
             
             ctx.beginPath();
-            ctx.arc(cx + currentRadius, cy, 6, 0, Math.PI*2); // Düz çizgi üzerinde hareket
+            ctx.arc(cx + currentRadius, cy, 6, 0, Math.PI*2);
             ctx.fillStyle = '#ff0055';
             ctx.fill();
             
-            // Çarpışma Kontrolü
             const activeRing = quantumState.rings[quantumState.level];
             
             if (activeRing && currentRadius <= activeRing.radius + 6 && currentRadius >= activeRing.radius - 6) {
                 let ringAngle = activeRing.angle % (Math.PI*2);
                 if(ringAngle < 0) ringAngle += Math.PI*2;
                 
-                // Gap Kontrolü (0 radyan gap içinde mi?)
-                // Gap: [angle - gap/2, angle + gap/2]
-                // Hedef: 0
-                // Fark (ringAngle ile 0 arası) < gap/2 ise geçiş başarılı
+                let diff = Math.abs(ringAngle - 0);
+                if (diff > Math.PI) diff = Math.PI*2 - diff;
                 
-                let diff = Math.abs(ringAngle - 0); // 0 = Entry Angle
-                if (diff > Math.PI) diff = Math.PI*2 - diff; // Kısa yol
-                
-                // Gap'in yarısından küçükse (yani merkezden sapma azsa) geçer
                 if (diff < activeRing.gapSize / 2) {
-                    // SUCCESS
                     quantumState.level++;
                     quantumState.ball.active = false;
                     quantumState.ball.progress = 0;
                     
-                    // Ses efekti çalınabilir
-                    
-                    if(quantumState.level >= quantumState.maxLevels) {
-                        winGame();
-                    }
+                    if(quantumState.level >= quantumState.maxLevels) winGame();
                 } else {
-                    // FAIL
                     failGame();
                 }
             }
         } else {
-            // Idle Ball
             ctx.beginPath();
             ctx.arc(cx + 170, cy, 4, 0, Math.PI*2);
             ctx.fillStyle = '#00f3ff';
             ctx.fill();
         }
 
-        // Core Status
+        // Core Status (Difficulty Indicator)
         ctx.beginPath();
         ctx.arc(cx, cy, 25, 0, Math.PI*2);
         ctx.fillStyle = '#1e1e24';
@@ -234,11 +226,13 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.strokeStyle = '#333';
         ctx.stroke();
         
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 14px Rajdhani';
+        ctx.fillStyle = isHard ? '#ff0055' : '#10b981'; // Zorluk rengi
+        ctx.font = 'bold 10px Inter';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(`${quantumState.level}/${quantumState.maxLevels}`, cx, cy);
+        ctx.fillText(CONFIG.difficulty, cx, cy - 5);
+        ctx.fillStyle = 'white';
+        ctx.fillText(`${quantumState.level}/${quantumState.maxLevels}`, cx, cy + 8);
 
         quantumState.animationId = requestAnimationFrame(gameLoop);
     }
@@ -252,29 +246,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function failGame() {
         quantumState.active = false;
         cancelAnimationFrame(quantumState.animationId);
-        
         injectBtn.innerText = "BAĞLANTI HATASI";
         injectBtn.style.background = "var(--accent-red)";
         
-        // Shake Effect
         canvas.style.transform = "translateX(10px)";
         setTimeout(() => canvas.style.transform = "translateX(-10px)", 50);
         setTimeout(() => canvas.style.transform = "translateX(5px)", 100);
         setTimeout(() => canvas.style.transform = "none", 150);
 
-        setTimeout(() => {
-            // Reset but harder? Hayır, baştan başlat.
-            resetGameUI();
-        }, 1500);
+        setTimeout(resetGameUI, 1500);
     }
 
     function winGame() {
         quantumState.active = false;
         cancelAnimationFrame(quantumState.animationId);
-        
         injectBtn.innerText = "ERİŞİM ONAYLANDI";
         injectBtn.style.background = "var(--accent-green)";
-        
         setTimeout(showDataReveal, 800);
     }
 
@@ -309,7 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 injectBtn.innerText = "GÖREV TAMAMLANDI";
                 injectBtn.style.background = "var(--accent-blue)";
                 
-                // Server Callback
                 const resourceName = window.GetParentResourceName ? window.GetParentResourceName() : 'fivem-hacker-script';
                 fetch(`https://${resourceName}/hackResult`, { method: 'POST', body: JSON.stringify({ success: true }) });
                 return;
