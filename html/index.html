@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silent Operator HUD</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="app"> 
+        
+        <!-- THE CYBER DECK (Unified Interface) -->
+        <div class="cyber-deck">
+            
+            <!-- HEADER: Status & Profile -->
+            <div class="deck-header">
+                <div class="user-info">
+                    <div class="avatar-mini">
+                        <i data-lucide="ghost" size="18"></i>
+                    </div>
+                    <div class="user-text">OP_PHANTOM</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-left: 8px;">SEVİYE 4</div>
+                </div>
+
+                <div class="system-stats">
+                    <div class="stat-item active">
+                        <i data-lucide="wifi" size="14"></i>
+                        <span>ÇEVRİMİÇİ</span>
+                    </div>
+                    <div class="stat-item">
+                        <i data-lucide="shield" size="14"></i>
+                        <span class="ip-address">192.168.X.X</span>
+                    </div>
+                    <div class="trace-indicator">
+                        <span style="font-size: 0.7rem; color: var(--accent-red); font-weight: 700;">TAKİP</span>
+                        <div class="trace-bar-mini-bg">
+                            <div class="trace-bar-mini-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENT AREA -->
+            <div class="deck-content">
+                
+                <!-- Dashboard -->
+                <div class="page active" id="dashboard">
+                    <h2 class="page-title">Görev Özeti</h2>
+                    <div class="grid-2">
+                        <div class="panel stat-box">
+                            <div class="stat-big" style="color: var(--accent-green);">1,250</div>
+                            <div class="stat-desc">İtibar Puanı</div>
+                        </div>
+                        <div class="panel stat-box">
+                            <i data-lucide="activity" size="40" style="color: var(--accent-blue); margin-bottom: 10px;"></i>
+                            <div style="font-size: 1.2rem; font-weight: 600;">Sistem Aktif</div>
+                            <div class="stat-desc">Tehdit algılanmadı</div>
+                        </div>
+                        <div class="panel" style="grid-column: span 2;">
+                            <h3 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Sistem Kayıtları</h3>
+                            <div style="font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); opacity: 0.8;">
+                                > Daemon başlatılıyor... TAMAM<br>
+                                > Güvenli düğüme bağlanılıyor... BAŞARILI<br>
+                                > Hedef girişi bekleniyor...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VPN -->
+                <div class="page" id="vpn">
+                    <h2 class="page-title">Ağ Bağlantıları</h2>
+                    <div class="vpn-list">
+                        <div class="vpn-row active">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="server" size="18" style="color: var(--accent-green);"></i>
+                                <div>
+                                    <div style="font-weight: 600;">Singapur #1</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Şifreli Tünel</div>
+                                </div>
+                            </div>
+                            <div style="font-family: var(--font-tech);">45ms</div>
+                        </div>
+                        <div class="vpn-row">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="server" size="18" style="color: var(--text-secondary);"></i>
+                                <div>
+                                    <div style="font-weight: 600;">Frankfurt #4</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Standart Tünel</div>
+                                </div>
+                            </div>
+                            <div style="font-family: var(--font-tech);">120ms</div>
+                        </div>
+                        <div class="vpn-row">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="server" size="18" style="color: var(--text-secondary);"></i>
+                                <div>
+                                    <div style="font-weight: 600;">New York #2</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Yüksek Gecikme</div>
+                                </div>
+                            </div>
+                            <div style="font-family: var(--font-tech);">180ms</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hack Tools -->
+                <div class="page" id="hacktools">
+                    <h2 class="page-title">Sızma Ağı</h2>
+                    <div class="hack-container-inner">
+                        <div id="grid-game">
+                            <!-- JS fills this -->
+                            <div style="color: var(--text-secondary); grid-column: span 5; text-align: center; padding: 20px; display: flex; align-items: center; justify-content: center; height: 100%;">
+                                Grid'i başlatmak için hedef seçin.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hack-controls">
+                        <button id="btn-inject" style="padding: 12px 40px; background: var(--accent-blue); border: none; border-radius: 8px; color: white; font-family: var(--font-tech); font-weight: 700; font-size: 1rem; cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s;">
+                            DİZİLİMİ BAŞLAT
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Phishing / Recon Page -->
+                <div class="page" id="phishing">
+                    <h2 class="page-title">Dijital Keşif</h2>
+                    
+                    <div class="recon-layout">
+                        <!-- Radar Section -->
+                        <div class="radar-container">
+                            <div class="radar-circle">
+                                <div class="radar-grid"></div>
+                                <div class="radar-sweep"></div>
+                                <div class="radar-center"></div>
+                                <!-- Pingler JS ile eklenecek -->
+                                <div id="radar-pings"></div>
+                            </div>
+                            <div class="radar-status">SİSTEM HAZIR</div>
+                        </div>
+
+                        <!-- Target List / Control Section -->
+                        <div class="recon-controls panel">
+                            <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--text-secondary);">TARAMA PARAMETRELERİ</h3>
+                            
+                            <div class="control-group">
+                                <label>Menzil</label>
+                                <div class="range-selector">
+                                    <div class="range-opt active">YEREL</div>
+                                    <div class="range-opt">KÜRESEL</div>
+                                </div>
+                            </div>
+
+                            <button id="btn-scan" class="action-btn">
+                                <i data-lucide="radio-receiver" size="18"></i>
+                                TARAMAYI BAŞLAT
+                            </button>
+
+                            <div id="target-results" style="margin-top: 2rem; display: none;">
+                                <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--accent-green);">ALGILANAN SİNYALLER (3)</h3>
+                                <div class="target-list">
+                                    <!-- JS ile doldurulacak -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- NAVIGATION (Bottom) -->
+            <div class="deck-nav">
+                <div class="nav-item active" data-page="dashboard">
+                    <i data-lucide="layout-grid" class="nav-icon"></i>
+                    <span class="nav-label">ANA SAYFA</span>
+                </div>
+                <div class="nav-item" data-page="vpn">
+                    <i data-lucide="globe" class="nav-icon"></i>
+                    <span class="nav-label">AĞ</span>
+                </div>
+                <div class="nav-item" data-page="hacktools">
+                    <i data-lucide="terminal" class="nav-icon"></i>
+                    <span class="nav-label">SALDIRI</span>
+                </div>
+                <div class="nav-item" data-page="phishing">
+                    <i data-lucide="users" class="nav-icon"></i>
+                    <span class="nav-label">SOSYAL</span>
+                </div>
+                <div class="nav-item" id="close-btn" style="color: var(--accent-red);">
+                    <i data-lucide="power" class="nav-icon"></i>
+                    <span class="nav-label">ÇIKIŞ</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        try { if (typeof lucide !== 'undefined') lucide.createIcons(); } catch(e){}
+    </script>
+</body>
+</html>
