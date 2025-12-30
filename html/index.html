@@ -23,7 +23,7 @@
                         <i data-lucide="ghost" size="18"></i>
                     </div>
                     <div class="user-text">OP_PHANTOM</div>
-                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-left: 8px;">SEVİYE 4</div>
+                    <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-left: 8px;">SEVİYE 4</div>
                 </div>
 
                 <div class="system-stats">
@@ -35,10 +35,10 @@
                         <i data-lucide="shield" size="14"></i>
                         <span class="ip-address">192.168.X.X</span>
                     </div>
-                    <div class="trace-indicator">
-                        <span style="font-size: 0.7rem; color: var(--accent-red); font-weight: 700;">TAKİP</span>
+                    <div class="trace-indicator" role="status" aria-label="Takip durumu: %0">
+                        <span style="font-size: var(--text-xs); color: var(--accent-red); font-weight: 700;">TAKİP</span>
                         <div class="trace-bar-mini-bg">
-                            <div class="trace-bar-mini-fill" style="width: 0%;"></div>
+                            <div class="trace-bar-mini-fill" style="width: 0%;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>
@@ -74,37 +74,37 @@
                 <!-- VPN -->
                 <div class="page" id="vpn">
                     <h2 class="page-title">Ağ Bağlantıları</h2>
-                    <div class="vpn-list">
-                        <div class="vpn-row active">
+                    <div class="vpn-list" role="group" aria-label="VPN Bağlantıları">
+                        <button class="vpn-row active" tabindex="0" aria-pressed="true" aria-label="Singapur #1 - Şifreli Tünel - 45ms - Aktif">
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <i data-lucide="server" size="18" style="color: var(--accent-green);"></i>
+                                <i data-lucide="server" size="18" style="color: var(--accent-green);" aria-hidden="true"></i>
                                 <div>
                                     <div style="font-weight: 600;">Singapur #1</div>
-                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Şifreli Tünel</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Şifreli Tünel</div>
                                 </div>
                             </div>
-                            <div style="font-family: var(--font-tech);">45ms</div>
-                        </div>
-                        <div class="vpn-row">
+                            <div style="font-family: var(--font-mono);">45ms</div>
+                        </button>
+                        <button class="vpn-row" tabindex="0" aria-pressed="false" aria-label="Frankfurt #4 - Standart Tünel - 120ms">
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <i data-lucide="server" size="18" style="color: var(--text-secondary);"></i>
+                                <i data-lucide="server" size="18" style="color: var(--text-secondary);" aria-hidden="true"></i>
                                 <div>
                                     <div style="font-weight: 600;">Frankfurt #4</div>
-                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Standart Tünel</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Standart Tünel</div>
                                 </div>
                             </div>
-                            <div style="font-family: var(--font-tech);">120ms</div>
-                        </div>
-                        <div class="vpn-row">
+                            <div style="font-family: var(--font-mono);">120ms</div>
+                        </button>
+                        <button class="vpn-row" tabindex="0" aria-pressed="false" aria-label="New York #2 - Yüksek Gecikme - 180ms">
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <i data-lucide="server" size="18" style="color: var(--text-secondary);"></i>
+                                <i data-lucide="server" size="18" style="color: var(--text-secondary);" aria-hidden="true"></i>
                                 <div>
                                     <div style="font-weight: 600;">New York #2</div>
-                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Yüksek Gecikme</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Yüksek Gecikme</div>
                                 </div>
                             </div>
-                            <div style="font-family: var(--font-tech);">180ms</div>
-                        </div>
+                            <div style="font-family: var(--font-mono);">180ms</div>
+                        </button>
                     </div>
                 </div>
 
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <div class="hack-controls">
-                        <button id="btn-inject" style="padding: 12px 40px; background: var(--accent-blue); border: none; border-radius: 8px; color: white; font-family: var(--font-tech); font-weight: 700; font-size: 1rem; cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s;">
+                        <button id="btn-inject" aria-label="Sızma protokolünü başlat - Space tuşuna basarak kilidi kır" style="padding: 12px 40px; background: var(--accent-blue); border: none; border-radius: 8px; color: white; font-family: var(--font-mono); font-weight: 700; font-size: var(--text-sm); cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s;">
                             DİZİLİMİ BAŞLAT
                         </button>
                     </div>
@@ -155,8 +155,8 @@
                                 </div>
                             </div>
 
-                            <button id="btn-scan" class="action-btn">
-                                <i data-lucide="radio-receiver" size="18"></i>
+                            <button id="btn-scan" class="action-btn" aria-label="Hedef tarama işlemini başlat">
+                                <i data-lucide="radio-receiver" size="18" aria-hidden="true"></i>
                                 TARAMAYI BAŞLAT
                             </button>
 
@@ -173,28 +173,28 @@
             </div>
 
             <!-- NAVIGATION (Bottom) -->
-            <div class="deck-nav">
-                <div class="nav-item active" data-page="dashboard">
-                    <i data-lucide="layout-grid" class="nav-icon"></i>
+            <nav class="deck-nav" role="navigation" aria-label="Ana Navigasyon">
+                <button class="nav-item active" data-page="dashboard" role="tab" aria-selected="true" aria-controls="dashboard" tabindex="0">
+                    <i data-lucide="layout-grid" class="nav-icon" aria-hidden="true"></i>
                     <span class="nav-label">ANA SAYFA</span>
-                </div>
-                <div class="nav-item" data-page="vpn">
-                    <i data-lucide="globe" class="nav-icon"></i>
+                </button>
+                <button class="nav-item" data-page="vpn" role="tab" aria-selected="false" aria-controls="vpn" tabindex="-1">
+                    <i data-lucide="globe" class="nav-icon" aria-hidden="true"></i>
                     <span class="nav-label">AĞ</span>
-                </div>
-                <div class="nav-item" data-page="hacktools">
-                    <i data-lucide="terminal" class="nav-icon"></i>
+                </button>
+                <button class="nav-item" data-page="hacktools" role="tab" aria-selected="false" aria-controls="hacktools" tabindex="-1">
+                    <i data-lucide="terminal" class="nav-icon" aria-hidden="true"></i>
                     <span class="nav-label">SALDIRI</span>
-                </div>
-                <div class="nav-item" data-page="phishing">
-                    <i data-lucide="users" class="nav-icon"></i>
+                </button>
+                <button class="nav-item" data-page="phishing" role="tab" aria-selected="false" aria-controls="phishing" tabindex="-1">
+                    <i data-lucide="users" class="nav-icon" aria-hidden="true"></i>
                     <span class="nav-label">SOSYAL</span>
-                </div>
-                <div class="nav-item" id="close-btn" style="color: var(--accent-red);">
-                    <i data-lucide="power" class="nav-icon"></i>
+                </button>
+                <button class="nav-item" id="close-btn" style="color: var(--accent-red);" aria-label="Uygulamayı Kapat" tabindex="0">
+                    <i data-lucide="power" class="nav-icon" aria-hidden="true"></i>
                     <span class="nav-label">ÇIKIŞ</span>
-                </div>
-            </div>
+                </button>
+            </nav>
 
         </div>
 
