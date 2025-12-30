@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- OYUN AYARLARI ---
     const CONFIG = {
-        difficulty: 'HARD', // Seçenekler: 'EASY', 'HARD'
+        difficulty: 'EASY', // Seçenekler: 'EASY', 'HARD'
         colors: {
             easy: '#10b981', // Yeşil
             hard: '#ff0055'  // Kırmızı
