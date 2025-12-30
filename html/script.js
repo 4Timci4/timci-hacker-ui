@@ -100,7 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx = canvas.getContext('2d');
 
         createRings();
-        gameLoop();
+        lastTime = performance.now(); // Zamanlayıcıyı sıfırla
+        gameLoop(lastTime);
     }
 
     function createRings() {
@@ -132,8 +133,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function gameLoop() {
+    // FPS Kontrolü
+    let lastTime = 0;
+    const targetFPS = 60;
+    const frameInterval = 1000 / targetFPS;
+
+    function gameLoop(timestamp) {
         if (!quantumState.active) return;
+
+        quantumState.animationId = requestAnimationFrame(gameLoop);
+
+        // Delta Time Kontrolü
+        const deltaTime = timestamp - lastTime;
+        if (deltaTime < frameInterval) return;
+
+        lastTime = timestamp - (deltaTime % frameInterval);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const cx = canvas.width / 2;
