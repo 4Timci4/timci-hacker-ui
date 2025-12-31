@@ -25,6 +25,57 @@
     --text-3xl: 2.5rem;    /* 40px */
 }
 
+/* --- UTILITY CLASSES --- */
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-secondary { color: var(--text-secondary); }
+.text-accent-red { color: var(--accent-red); }
+.text-accent-green { color: var(--accent-green); }
+.text-accent-blue { color: var(--accent-blue); }
+.text-accent-warning { color: var(--accent-warning); }
+.font-mono { font-family: var(--font-mono); }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.opacity-80 { opacity: 0.8; }
+.uppercase { text-transform: uppercase; }
+
+.flex-center { display: flex; align-items: center; }
+.flex-col { display: flex; flex-direction: column; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.ml-2 { margin-left: 8px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mt-2 { margin-top: 8px; }
+.mt-4 { margin-top: 16px; }
+.mt-8 { margin-top: 32px; }
+.col-span-2 { grid-column: span 2; }
+.col-span-5 { grid-column: span 5; }
+.text-center { text-align: center; }
+.p-5 { padding: 20px; }
+.h-full { height: 100%; }
+.justify-center { justify-content: center; }
+.hidden { display: none; }
+
+/* Custom Component Utilities */
+.status-indicator-box {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.hack-grid-placeholder {
+    color: var(--text-secondary);
+    grid-column: span 5;
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 ::-webkit-scrollbar { width: 0px; background: transparent; }
 
@@ -475,6 +526,25 @@ h2.page-title {
 .action-btn.loading, #btn-inject.loading, #btn-scan.loading {
     pointer-events: none;
     position: relative;
+}
+
+.action-btn-lg {
+    padding: 12px 40px;
+    background: var(--accent-blue);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+}
+
+.action-btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 .action-btn.loading::after, #btn-inject.loading::after, #btn-scan.loading::after {

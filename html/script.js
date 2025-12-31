@@ -7,12 +7,38 @@ document.addEventListener('DOMContentLoaded', () => {
         sounds: localStorage.getItem('silent-operator-sounds') === 'true',
         colors: {
             easy: '#10b981',
-            hard: '#ff0055'
+            hard: '#ff0055',
+            success: '#10b981',
+            error: '#ff0055',
+            warning: '#facc15',
+            info: '#00f3ff',
+            primary: '#00f3ff',
+            secondary: '#94a3b8',
+            blue: '#3b82f6'
         },
         ui: {
             toastDuration: 3000,
             loadingDelay: 300,
             animationSpeed: 'normal'
+        },
+        game: {
+            easy: {
+                baseSpeedStart: 0.02,
+                speedIncrement: 0.01,
+                gapSize: Math.PI / 4,
+                jitterSpeed: 0
+            },
+            hard: {
+                baseSpeedStart: 0.04,
+                speedIncrement: 0.02,
+                gapSizeBase: Math.PI / 6,
+                gapSizeDecrement: 0.1,
+                jitterBase: 0.05,
+                jitterRandom: 0.05
+            },
+            fps: 60,
+            ballSpeed: 12,
+            maxLevels: 3
         }
     };
 
@@ -668,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let quantumState = {
         active: false,
         level: 0,
-        maxLevels: 3,
+        maxLevels: CONFIG.game.maxLevels,
         rings: [],
         ball: { r: 5, angle: 0, speed: 0, active: false, progress: 0 },
         animationId: null,
@@ -869,17 +895,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function createRings() {
         quantumState.rings = [];
         const isHard = CONFIG.difficulty === 'HARD';
+        const settings = isHard ? CONFIG.game.hard : CONFIG.game.easy;
 
-        for(let i=0; i<quantumState.maxLevels; i++) {
+        for(let i=0; i<quantumState.game.maxLevels; i++) {
             // Zorluk Ayarları
-            let baseSpeed = 0.02 + (i * 0.01);
-            let gapSize = Math.PI / 4; // 45 derece (Kolay)
-            let jitterSpeed = 0;
+            let baseSpeed, gapSize, jitterSpeed;
 
             if (isHard) {
-                baseSpeed = 0.04 + (i * 0.02); // Daha hızlı
-                gapSize = (Math.PI / 6) - (i * 0.1); // Çok daha dar (30 derece ve altı)
-                jitterSpeed = 0.05 + (Math.random() * 0.05);
+                baseSpeed = settings.baseSpeedStart + (i * settings.speedIncrement);
+                gapSize = settings.gapSizeBase - (i * settings.gapSizeDecrement);
+                jitterSpeed = settings.jitterBase + (Math.random() * settings.jitterRandom);
+            } else {
+                baseSpeed = settings.baseSpeedStart + (i * settings.speedIncrement);
+                gapSize = settings.gapSize;
+                jitterSpeed = settings.jitterSpeed;
             }
 
             const direction = Math.random() > 0.5 ? 1 : -1;
@@ -897,7 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // FPS Kontrolü
     let lastTime = 0;
-    const targetFPS = 60;
+    const targetFPS = CONFIG.game.fps;
     const frameInterval = 1000 / targetFPS;
 
     function gameLoop(timestamp) {
@@ -974,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Projectile
         if (quantumState.ball.active) {
-            quantumState.ball.progress += 12;
+            quantumState.ball.progress += CONFIG.game.ballSpeed;
             const currentRadius = 160 - quantumState.ball.progress;
             
             ctx.beginPath();
